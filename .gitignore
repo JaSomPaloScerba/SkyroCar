@@ -1,6 +1,0 @@
-/vendor/
-/.env
-.DS_Store
-*.log
-/.history
-/git-filter-repo/
