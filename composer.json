@@ -1,0 +1,8 @@
+{
+    "name": "google/oauth-app",
+    "description": "Google OAuth login and MySQL save",
+    "require": {
+      "google/apiclient": "*",
+      "vlucas/phpdotenv": "*"
+    }
+  }
