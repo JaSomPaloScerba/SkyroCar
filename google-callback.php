@@ -1,32 +1,36 @@
 <?php
-require_once 'vendor/autoload.php';
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
-$dotenv->load();
+require_once __DIR__ . '/vendor/autoload.php';
 
-// Connect to MySQL (MAMP defaults)
-$pdo = new PDO("mysql:host=127.0.0.1;port=8889;dbname=oauth_db", "root", "root");
+
+
+session_start();
 
 $client = new Google_Client();
-$client->setClientId($_ENV['GOOGLE_CLIENT_ID']);
-$client->setClientSecret($_ENV['GOOGLE_CLIENT_SECRET']);
-$client->setRedirectUri($_ENV['GOOGLE_REDIRECT_URI']);
+$client->setClientId('992096689947-hroecv3o00n1hi3u6435hvdo4pag0378.apps.googleusercontent.com');
+$client->setClientSecret('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');
+$client->setRedirectUri('http://localhost/google-callback.php');
+$client->addScope('email');
+$client->addScope('profile');
 
 if (isset($_GET['code'])) {
     $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
     $client->setAccessToken($token);
 
-    $google_service = new Google_Service_Oauth2($client);
-    $user_info = $google_service->userinfo->get();
+    // Get user profile info
+    $oauth = new Google_Service_Oauth2($client);
+    $userInfo = $oauth->userinfo->get();
 
-    $stmt = $pdo->prepare("INSERT INTO users (provider, provider_id, name, email) VALUES (?, ?, ?, ?)");
-    $stmt->execute([
-        'google',
-        $user_info->id,
-        $user_info->name,
-        $user_info->email
-    ]);
+    // Store in session or database
+    $_SESSION['user'] = [
+        'id' => $userInfo->id,
+        'name' => $userInfo->name,
+        'email' => $userInfo->email,
+        'picture' => $userInfo->picture
+    ];
 
-    echo "✅ Welcome, " . htmlspecialchars($user_info->name);
+    // Redirect to home page or dashboard
+    header('Location: index.php');
+    exit;
 } else {
-    echo "❌ Login failed.";
+    echo 'Authorization code not found';
 }
