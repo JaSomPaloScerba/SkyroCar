@@ -10,7 +10,7 @@ session_start();
 $client = new Google_Client();
 $client->setClientId('992096689947-hroecv3o00n1hi3u6435hvdo4pag0378.apps.googleusercontent.com');
 $client->setClientSecret('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');
-$client->setRedirectUri('http://localhost:8888/google-oauth-app/google-callback.php');
+$client->setRedirectUri('http://localhost/google-callback.php');
 $client->addScope('email');
 $client->addScope('profile');
 

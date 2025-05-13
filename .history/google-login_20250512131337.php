@@ -18,5 +18,3 @@ $client->addScope("email");
 $client->addScope("profile");
 
 header('Location: ' . $client->createAuthUrl());
-
-
